@@ -2234,7 +2234,11 @@
                                 onClick={() => {
                                     setActiveNav('home');
                                     const element = document.querySelector('.hero');
-                                    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    if (element) {
+                                        const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 0;
+                                        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                                        window.scrollTo({ top: elementPosition - navbarHeight, behavior: 'smooth' });
+                                    }
                                 }}
                             >
                                 <i className="fas fa-home"></i>
@@ -2245,7 +2249,11 @@
                                 onClick={() => {
                                     setActiveNav('menu');
                                     const element = document.querySelector('.category-section');
-                                    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    if (element) {
+                                        const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 0;
+                                        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                                        window.scrollTo({ top: elementPosition - navbarHeight, behavior: 'smooth' });
+                                    }
                                 }}
                             >
                                 <i className="fas fa-utensils"></i>
@@ -2256,7 +2264,11 @@
                                 onClick={() => {
                                     setActiveNav('testimonials');
                                     const element = document.querySelector('.testimonials');
-                                    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    if (element) {
+                                        const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 0;
+                                        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                                        window.scrollTo({ top: elementPosition - navbarHeight, behavior: 'smooth' });
+                                    }
                                 }}
                             >
                                 <i className="fas fa-star"></i>
@@ -2267,7 +2279,11 @@
                                 onClick={() => {
                                     setActiveNav('contact');
                                     const element = document.querySelector('.location-section');
-                                    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    if (element) {
+                                        const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 0;
+                                        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                                        window.scrollTo({ top: elementPosition - navbarHeight, behavior: 'smooth' });
+                                    }
                                 }}
                             >
                                 <i className="fas fa-map-marker-alt"></i>
