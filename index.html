@@ -1408,6 +1408,7 @@
             }
 
             .menu-items {
+                grid-template-columns: 1fr 1fr;
                 gap: 20px;
             }
 
@@ -1925,6 +1926,16 @@
 
                 window.addEventListener('scroll', handleScroll);
                 return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            useEffect(() => {
+                // Scroll category nav to show "All" button on load
+                setTimeout(() => {
+                    const container = document.querySelector('.category-nav-container');
+                    if (container) {
+                        container.scrollLeft = 0;
+                    }
+                }, 100);
             }, []);
 
             const scrollToTop = () => {
