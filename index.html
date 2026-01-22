@@ -2181,6 +2181,53 @@
             color: #999;
         }
 
+        .address-autocomplete {
+            position: relative;
+        }
+
+        .address-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid var(--orange);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .address-suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s ease;
+        }
+
+        .address-suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .address-suggestion-item:hover {
+            background: rgba(255,140,66,0.1);
+        }
+
+        .address-suggestion-item i {
+            color: var(--orange);
+            font-size: 14px;
+        }
+
+        .address-suggestion-item span {
+            font-size: 13px;
+            color: #333;
+        }
+
         .cart-total {
             display: flex;
             justify-content: space-between;
@@ -2522,6 +2569,92 @@
             { id: 'protein', name: 'Protein & Sides', image: 'roasted chicken.JPG' },
         ];
 
+        // Port Harcourt Areas and Landmarks for Address Autocomplete
+        const portHarcourtAreas = [
+            // Major Areas
+            "Ada George Road, Port Harcourt",
+            "Aba Road, Port Harcourt",
+            "Aggrey Road, Port Harcourt",
+            "Airport Road, Port Harcourt",
+            "Azikiwe Road, Port Harcourt",
+            "Borikiri, Port Harcourt",
+            "Bori Camp, Port Harcourt",
+            "Choba, Port Harcourt",
+            "D-Line, Port Harcourt",
+            "Diobu, Port Harcourt",
+            "Eagle Island, Port Harcourt",
+            "Elekahia, Port Harcourt",
+            "Elelenwo, Port Harcourt",
+            "Elimgbu, Port Harcourt",
+            "Eneka, Port Harcourt",
+            "Forces Avenue, Port Harcourt",
+            "GRA Phase 1, Port Harcourt",
+            "GRA Phase 2, Port Harcourt",
+            "GRA Phase 3, Port Harcourt",
+            "GRA Phase 4, Port Harcourt",
+            "Garrison, Port Harcourt",
+            "Ikwerre Road, Port Harcourt",
+            "Igwuruta, Port Harcourt",
+            "Mile 1, Diobu, Port Harcourt",
+            "Mile 2, Diobu, Port Harcourt",
+            "Mile 3, Diobu, Port Harcourt",
+            "Mile 4, Rumueme, Port Harcourt",
+            "Mgbuoba, Port Harcourt",
+            "Moscow Road, Port Harcourt",
+            "New GRA, Port Harcourt",
+            "Nkpolu, Port Harcourt",
+            "NTA Road, Port Harcourt",
+            "Obigbo, Port Harcourt",
+            "Odili Road, Port Harcourt",
+            "Ogbunabali, Port Harcourt",
+            "Oginigba, Port Harcourt",
+            "Ogbogoro, Port Harcourt",
+            "Old GRA, Port Harcourt",
+            "Old Aba Road, Port Harcourt",
+            "Oroazi, Port Harcourt",
+            "Oyigbo, Port Harcourt",
+            "Peter Odili Road, Port Harcourt",
+            "Psychiatric Road, Port Harcourt",
+            "Rumuola, Port Harcourt",
+            "Rumuokoro, Port Harcourt",
+            "Rumuolumeni, Port Harcourt",
+            "Rumuomasi, Port Harcourt",
+            "Rumuigbo, Port Harcourt",
+            "Rumuibekwe, Port Harcourt",
+            "Rumuobiokani, Port Harcourt",
+            "Rukpokwu, Port Harcourt",
+            "Stadium Road, Port Harcourt",
+            "Trans Amadi, Port Harcourt",
+            "Woji, Port Harcourt",
+            "Wimpy, Port Harcourt",
+            // Landmarks
+            "University of Port Harcourt (UNIPORT)",
+            "Rivers State University (RSU)",
+            "Port Harcourt Mall, Azikiwe Road",
+            "Genesis Deluxe Cinema, Port Harcourt",
+            "Shoprite, Port Harcourt",
+            "Port Harcourt Pleasure Park",
+            "Isaac Boro Park, Port Harcourt",
+            "Port Harcourt Zoo",
+            "Liberation Stadium, Port Harcourt",
+            "Port Harcourt International Airport",
+            "Eleme Junction, Port Harcourt",
+            "Waterlines, Port Harcourt",
+            "Slaughter, Port Harcourt",
+            "Artillery, Port Harcourt",
+            "Okija Street, Port Harcourt",
+            "Tombia Street, Port Harcourt",
+            "Olu Obasanjo Road, Port Harcourt",
+            "Evo Road, Port Harcourt",
+            "Shell RA, Port Harcourt",
+            "Agip Estate, Port Harcourt",
+            "Rainbow Town, Port Harcourt",
+            "Rumuokwurusi, Port Harcourt",
+            "Eliozu, Port Harcourt",
+            "Eligbam, Port Harcourt",
+            "Aluu, Port Harcourt",
+        ];
+
         // Components
         function LandingPage({ onNavigate }) {
             return (
@@ -2567,6 +2700,29 @@
             const [toast, setToast] = useState({ show: false, message: '' });
             const [deliveryMethod, setDeliveryMethod] = useState('delivery');
             const [deliveryAddress, setDeliveryAddress] = useState('');
+            const [showAddressSuggestions, setShowAddressSuggestions] = useState(false);
+            const [addressSuggestions, setAddressSuggestions] = useState([]);
+
+            // Address autocomplete function
+            const handleAddressChange = (value) => {
+                setDeliveryAddress(value);
+                if (value.length >= 2) {
+                    const filtered = portHarcourtAreas.filter(area =>
+                        area.toLowerCase().includes(value.toLowerCase())
+                    ).slice(0, 6);
+                    setAddressSuggestions(filtered);
+                    setShowAddressSuggestions(filtered.length > 0);
+                } else {
+                    setShowAddressSuggestions(false);
+                    setAddressSuggestions([]);
+                }
+            };
+
+            const selectAddress = (address) => {
+                setDeliveryAddress(address);
+                setShowAddressSuggestions(false);
+                setAddressSuggestions([]);
+            };
 
             // Cart functions
             const addToCart = (item) => {
@@ -3227,14 +3383,30 @@
                                         </label>
                                     </div>
                                     {deliveryMethod === 'delivery' && (
-                                        <div className="delivery-address">
+                                        <div className="delivery-address address-autocomplete">
                                             <input
                                                 type="text"
-                                                placeholder="Enter your delivery address..."
+                                                placeholder="Start typing your area (e.g. GRA, Rumuola, Trans Amadi...)"
                                                 value={deliveryAddress}
-                                                onChange={(e) => setDeliveryAddress(e.target.value)}
+                                                onChange={(e) => handleAddressChange(e.target.value)}
+                                                onFocus={() => deliveryAddress.length >= 2 && setShowAddressSuggestions(addressSuggestions.length > 0)}
+                                                onBlur={() => setTimeout(() => setShowAddressSuggestions(false), 200)}
                                                 className="delivery-address-input"
                                             />
+                                            {showAddressSuggestions && (
+                                                <div className="address-suggestions">
+                                                    {addressSuggestions.map((suggestion, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className="address-suggestion-item"
+                                                            onClick={() => selectAddress(suggestion)}
+                                                        >
+                                                            <i className="fas fa-map-marker-alt"></i>
+                                                            <span>{suggestion}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </div>
