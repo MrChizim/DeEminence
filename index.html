@@ -2106,6 +2106,81 @@
             background: rgba(255,140,66,0.05);
         }
 
+        .delivery-method-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,140,66,0.2);
+        }
+
+        .delivery-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .delivery-option {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .delivery-option input {
+            display: none;
+        }
+
+        .delivery-option-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .delivery-option-content i {
+            font-size: 24px;
+            color: #666;
+        }
+
+        .delivery-option-content span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .delivery-option.selected .delivery-option-content {
+            border-color: var(--orange);
+            background: rgba(255,140,66,0.1);
+        }
+
+        .delivery-option.selected .delivery-option-content i {
+            color: var(--orange);
+        }
+
+        .delivery-address {
+            margin-top: 15px;
+        }
+
+        .delivery-address-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .delivery-address-input:focus {
+            border-color: var(--orange);
+        }
+
+        .delivery-address-input::placeholder {
+            color: #999;
+        }
+
         .cart-total {
             display: flex;
             justify-content: space-between;
@@ -2301,7 +2376,7 @@
       "image": "https://deeminenteatery.com/LOGO.PNG",
       "@id": "https://deeminenteatery.com",
       "url": "https://deeminenteatery.com",
-      "telephone": "+2347039539167",
+      "telephone": "+2349110609431",
       "priceRange": "₦500 - ₦5000",
       "address": {
         "@type": "PostalAddress",
@@ -2413,7 +2488,7 @@
             { id: 28, name: 'Popcorn', category: 'baked', price: 1000, description: 'Freshly popped buttery popcorn', image: 'popcorn.JPG' },
             { id: 29, name: 'Chicken Pie', category: 'baked', price: 1500, description: 'Savory chicken pie with flaky crust', image: 'chicken pie.JPG' },
             { id: 30, name: 'Peanut Cookies', category: 'baked', price: 2000, description: 'Crunchy homemade peanut cookies', image: 'peanut cookie.JPG' },
-            { id: 31, name: 'Salad Pie', category: 'baked', price: 2500, description: 'Delicious pie filled with creamy coleslaw salad', image: 'meatpie.JPG' },
+            { id: 31, name: 'Salad Pie', category: 'baked', price: 2500, description: 'Delicious pie filled with creamy coleslaw salad', image: 'Saladpie.JPG' },
 
             // Main Meals
             { id: 32, name: 'Burger', category: 'meals', price: 2500, description: 'Juicy beef burger with fresh toppings', image: 'burger.JPG' },
@@ -2490,6 +2565,8 @@
             const [cart, setCart] = useState([]);
             const [showCart, setShowCart] = useState(false);
             const [toast, setToast] = useState({ show: false, message: '' });
+            const [deliveryMethod, setDeliveryMethod] = useState('delivery');
+            const [deliveryAddress, setDeliveryAddress] = useState('');
 
             // Cart functions
             const addToCart = (item) => {
@@ -2542,15 +2619,23 @@
 
             const checkout = () => {
                 if (cart.length === 0) return;
+                if (deliveryMethod === 'delivery' && !deliveryAddress.trim()) {
+                    showToast('Please enter your delivery address');
+                    return;
+                }
 
                 let message = "Hello! I'd like to order from De-Eminent Eatery:\n\n";
                 cart.forEach(item => {
                     message += `• ${item.name} x${item.quantity} - ₦${(item.price * item.quantity).toLocaleString()}\n`;
                 });
                 message += `\n*Total: ₦${getCartTotal().toLocaleString()}*`;
-                message += "\n\nPlease confirm availability and delivery details.";
+                message += `\n\n*Delivery Method:* ${deliveryMethod === 'pickup' ? '🏪 Pickup from Store' : '🚚 Home Delivery'}`;
+                if (deliveryMethod === 'delivery') {
+                    message += `\n*Delivery Address:* ${deliveryAddress}`;
+                }
+                message += "\n\nPlease confirm availability and payment details.";
 
-                window.open(`https://wa.me/2347039539167?text=${encodeURIComponent(message)}`, '_blank');
+                window.open(`https://wa.me/2349110609431?text=${encodeURIComponent(message)}`, '_blank');
             };
 
             const isInCart = (itemId) => {
@@ -2632,7 +2717,7 @@
 
             const orderItem = (itemName) => {
                 const message = `Hello! I'd like to order ${itemName} from De-Eminent Eatery.`;
-                window.open(`https://wa.me/2347039539167?text=${encodeURIComponent(message)}`, '_blank');
+                window.open(`https://wa.me/2349110609431?text=${encodeURIComponent(message)}`, '_blank');
             };
 
             return (
@@ -2650,7 +2735,7 @@
                                 <button className="nav-contact" onClick={() => scrollToSection('payment-methods-section')} style={{background: 'var(--orange)', border: 'none', cursor: 'pointer'}}>
                                     <i className="fas fa-credit-card"></i> Pay
                                 </button>
-                                <a href="tel:07039539167" className="nav-contact">
+                                <a href="tel:09110609431" className="nav-contact">
                                     <i className="fas fa-phone"></i> Call Now
                                 </a>
                             </div>
@@ -2926,7 +3011,7 @@
                                         </div>
                                         <div className="location-details">
                                             <h4>Call Us</h4>
-                                            <p><a href="tel:07039539167">0703 953 9167</a></p>
+                                            <p><a href="tel:09110609431">0911 060 9431</a></p>
                                         </div>
                                     </div>
                                     <div className="location-item">
@@ -2955,7 +3040,7 @@
                                                 </div>
                                                 <h3>WhatsApp Order</h3>
                                                 <p>Send your order via WhatsApp and pay on delivery</p>
-                                                <a href="https://wa.me/2347039539167?text=Hello,%20I%20would%20like%20to%20place%20an%20order" target="_blank" rel="noopener noreferrer" className="cta-btn" style={{display: 'inline-block', marginTop: '10px'}}>
+                                                <a href="https://wa.me/2349110609431?text=Hello,%20I%20would%20like%20to%20place%20an%20order" target="_blank" rel="noopener noreferrer" className="cta-btn" style={{display: 'inline-block', marginTop: '10px'}}>
                                                     <i className="fab fa-whatsapp"></i> Order via WhatsApp
                                                 </a>
                                             </div>
@@ -2965,15 +3050,10 @@
                                                     <i className="fas fa-bank"></i>
                                                 </div>
                                                 <h3>Bank Transfer</h3>
-                                                <p>Direct bank transfer to our account</p>
-                                                <div className="payment-details">
-                                                    <strong>Account Number:</strong>
-                                                    0012345678
-                                                    <strong style={{marginTop: '10px'}}>Bank:</strong>
-                                                    GTBank
-                                                    <strong style={{marginTop: '10px'}}>Name:</strong>
-                                                    De-Eminent Eatery
-                                                </div>
+                                                <p>Get our account details via WhatsApp</p>
+                                                <a href="https://wa.me/2349110609431?text=Hello! I'd like to get the bank account details for payment." target="_blank" rel="noopener noreferrer" className="cta-btn" style={{display: 'inline-block', marginTop: '10px'}}>
+                                                    <i className="fab fa-whatsapp"></i> Get Account Details
+                                                </a>
                                             </div>
 
                                             <div className="payment-method-card">
@@ -2982,8 +3062,8 @@
                                                 </div>
                                                 <h3>Call to Order</h3>
                                                 <p>Call us and arrange payment method</p>
-                                                <a href="tel:07039539167" className="cta-btn" style={{display: 'inline-block', marginTop: '10px'}}>
-                                                    <i className="fas fa-phone"></i> Call: 0703 953 9167
+                                                <a href="tel:09110609431" className="cta-btn" style={{display: 'inline-block', marginTop: '10px'}}>
+                                                    <i className="fas fa-phone"></i> Call: 0911 060 9431
                                                 </a>
                                             </div>
                                         </div>
@@ -3054,7 +3134,7 @@
                             <div className="footer-section">
                                 <h3>Contact Info</h3>
                                 <p><i className="fas fa-map-marker-alt" style={{color: 'var(--orange)', marginRight: '10px'}}></i>54 Port Harcourt Road<br/>Chokocho Etche, Port Harcourt</p>
-                                <p><i className="fas fa-phone" style={{color: 'var(--orange)', marginRight: '10px'}}></i><a href="tel:07039539167">0703 953 9167</a></p>
+                                <p><i className="fas fa-phone" style={{color: 'var(--orange)', marginRight: '10px'}}></i><a href="tel:09110609431">0911 060 9431</a></p>
                                 <p><i className="fas fa-clock" style={{color: 'var(--orange)', marginRight: '10px'}}></i>Mon-Sat: 8AM - 10PM<br/>Sunday: Closed</p>
                             </div>
                         </div>
@@ -3116,6 +3196,48 @@
 
                         {cart.length > 0 && (
                             <div className="cart-footer">
+                                <div className="delivery-method-section">
+                                    <h4 style={{margin: '0 0 10px 0', color: 'var(--brown)'}}>Delivery Method</h4>
+                                    <div className="delivery-options">
+                                        <label className={`delivery-option ${deliveryMethod === 'pickup' ? 'selected' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="delivery"
+                                                value="pickup"
+                                                checked={deliveryMethod === 'pickup'}
+                                                onChange={(e) => setDeliveryMethod(e.target.value)}
+                                            />
+                                            <span className="delivery-option-content">
+                                                <i className="fas fa-store"></i>
+                                                <span>Pickup from Store</span>
+                                            </span>
+                                        </label>
+                                        <label className={`delivery-option ${deliveryMethod === 'delivery' ? 'selected' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="delivery"
+                                                value="delivery"
+                                                checked={deliveryMethod === 'delivery'}
+                                                onChange={(e) => setDeliveryMethod(e.target.value)}
+                                            />
+                                            <span className="delivery-option-content">
+                                                <i className="fas fa-truck"></i>
+                                                <span>Home Delivery</span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    {deliveryMethod === 'delivery' && (
+                                        <div className="delivery-address">
+                                            <input
+                                                type="text"
+                                                placeholder="Enter your delivery address..."
+                                                value={deliveryAddress}
+                                                onChange={(e) => setDeliveryAddress(e.target.value)}
+                                                className="delivery-address-input"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="cart-total">
                                     <span>Total:</span>
                                     <span className="cart-total-amount">₦{getCartTotal().toLocaleString()}</span>
@@ -3203,7 +3325,7 @@
                             </div>
                             <div
                                 className="nav-item"
-                                onClick={() => window.open('https://wa.me/2347039539167?text=Hello! I\'d like to place an order', '_blank')}
+                                onClick={() => window.open('https://wa.me/2349110609431?text=Hello! I\'d like to place an order', '_blank')}
                             >
                                 <i className="fab fa-whatsapp"></i>
                                 <span>Order</span>
@@ -3225,7 +3347,7 @@
                             <div className="nav-logo">
                                 <img src="LOGO.PNG" alt="De-Eminent" />
                             </div>
-                            <a href="tel:07039539167" className="nav-contact">
+                            <a href="tel:09110609431" className="nav-contact">
                                 <i className="fas fa-phone"></i> Call Now
                             </a>
                         </div>
@@ -3253,7 +3375,7 @@
                                 <p style={{color: 'rgba(255,255,255,0.7)'}}>Professional catering for business functions</p>
                             </div>
                         </div>
-                        <button className="cta-btn" style={{marginTop: '50px'}} onClick={() => window.open('https://wa.me/2347039539167?text=Hello! I\'d like to book catering services', '_blank')}>
+                        <button className="cta-btn" style={{marginTop: '50px'}} onClick={() => window.open('https://wa.me/2349110609431?text=Hello! I\'d like to book catering services', '_blank')}>
                             Book Now via WhatsApp
                         </button>
                     </div>
@@ -3272,7 +3394,7 @@
                             <div className="nav-logo">
                                 <img src="LOGO.PNG" alt="De-Eminent" />
                             </div>
-                            <a href="tel:07039539167" className="nav-contact">
+                            <a href="tel:09110609431" className="nav-contact">
                                 <i className="fas fa-phone"></i> Call Now
                             </a>
                         </div>
